@@ -79,4 +79,9 @@ class Message extends AbstractModel
     {
         return self::TABLE_NAME;
     }
+
+    protected function getPublicFields()
+    {
+        return '*';
+    }
 }

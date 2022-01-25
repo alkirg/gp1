@@ -11,21 +11,17 @@ abstract class AbstractModel implements ModelInterface
         $this->id = $id;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     abstract protected function getTableName();
+    abstract protected function getPublicFields();
 
     public function get()
     {
-        return Db::getInstance()->fetchAll('SELECT * FROM ' . $this->getTableName());
+        return Db::getInstance()->fetchAll('SELECT ' . $this->getPublicFields . ' FROM ' . $this->getTableName());
     }
 
     public function getById(int $id)
     {
-        return Db::getInstance()->fetch('SELECT * FROM ' . $this->getTableName() . ' WHERE `id` = :id', [':id' => $id]);
+        return Db::getInstance()->fetch('SELECT ' . $this->getPublicFields . ' FROM ' . $this->getTableName() . ' WHERE `id` = :id', [':id' => $id]);
     }
 
     public function delete(int $id): bool

@@ -37,7 +37,7 @@ class User extends AbstractModel
 
     public function getByEmail(string $email)
     {
-        return Db::getInstance()->fetch('SELECT * FROM ' . $this->getTableName() . ' WHERE email = :email', [':email' => $email]);
+        return Db::getInstance()->fetch('SELECT ' . $this->getPublicFields . ' FROM ' . $this->getTableName() . ' WHERE email = :email', [':email' => $email]);
     }
 
     public function add(array $fields): int
@@ -96,5 +96,10 @@ class User extends AbstractModel
     protected function getTableName()
     {
         return self::TABLE_NAME;
+    }
+
+    protected function getPublicFields()
+    {
+        return '`id`, `name`, email, date_insert';
     }
 }
