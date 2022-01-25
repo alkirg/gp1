@@ -3,7 +3,7 @@ namespace Kav\Blog;
 
 class Db
 {
-    const CONFIG_PATH = __DIR__ . '/../../config.json';
+    const CONFIG_PATH = __DIR__ . '/../../../config.json';
     const ERR_CONFIG = 'Не найден файл конфигурации';
     const ERR_QUERY = 'Неизвестная ошибка запроса';
 
@@ -37,7 +37,6 @@ class Db
         if (!$config) {
             echo self::ERR_CONFIG;
             trigger_error(self::ERR_CONFIG, E_USER_ERROR);
-            return false;
         }
         $this->config = json_decode($config, true);
         return true;
