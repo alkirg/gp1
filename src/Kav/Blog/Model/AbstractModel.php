@@ -6,7 +6,7 @@ abstract class AbstractModel implements ModelInterface
 {
     protected int $id;
 
-    public function __construct(int $id)
+    public function __construct($id = -1)
     {
         $this->id = $id;
     }
@@ -16,12 +16,12 @@ abstract class AbstractModel implements ModelInterface
 
     public function get()
     {
-        return Db::getInstance()->fetchAll('SELECT ' . $this->getPublicFields . ' FROM ' . $this->getTableName());
+        return Db::getInstance()->fetchAll('SELECT ' . $this->getPublicFields() . ' FROM ' . $this->getTableName());
     }
 
     public function getById(int $id)
     {
-        return Db::getInstance()->fetch('SELECT ' . $this->getPublicFields . ' FROM ' . $this->getTableName() . ' WHERE `id` = :id', [':id' => $id]);
+        return Db::getInstance()->fetch('SELECT ' . $this->getPublicFields() . ' FROM ' . $this->getTableName() . ' WHERE `id` = :id', [':id' => $id]);
     }
 
     public function delete(int $id): bool

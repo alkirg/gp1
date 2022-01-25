@@ -13,12 +13,12 @@ class Message extends AbstractModel
     private string $dateInsert;
     private int $userId;
 
-    public function __construct($id, $message, $dateInsert, $userId)
+    public function __construct($args = [])
     {
-        $this->message = $message;
-        $this->dateInsert = $dateInsert;
-        $this->userId = $userId;
-        parent::__construct($id);
+        $this->message = $args['message'] ?? '';
+        $this->dateInsert = $args['date_insert'] ?? '';
+        $this->userId = $args['user_id'] ?? -1;
+        parent::__construct($args['id'] ?? -1);
     }
 
     public function fields(): array
@@ -36,7 +36,7 @@ class Message extends AbstractModel
         $this->checkFields($fields);
         $db = Db::getInstance();
         $db->exec(
-            'INSERT INTO ' . self::TABLE_NAME . '(user_id, message, date_insert) VALUES (:user_id, :message, :date_insert)',
+            'INSERT INTO ' . $this->getTableName() . '(user_id, message, date_insert) VALUES (:user_id, :message, :date_insert)',
             [
                 ':user_id' => $fields['user_id'],
                 ':message' => $fields['message'],
@@ -51,9 +51,8 @@ class Message extends AbstractModel
         if (!$fields['id']) {
             trigger_error(self::ERR_ID, E_USER_ERROR);
         }
-        $this->checkFields($fields);
         return Db::getInstance()->exec(
-            'UPDATE users SET user_id = :user_id, message = :message, date_insert = :date_insert WHERE `id` = :id',
+            'UPDATE ' . $this->getTableName() . ' SET user_id = :user_id, message = :message, date_insert = :date_insert WHERE `id` = :id',
             [
                 ':user_id' => $fields['user_id'],
                 ':message' => $fields['message'],
