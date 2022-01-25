@@ -25,7 +25,7 @@ class Message extends AbstractModel
     {
         return [
             'id' => $this->id,
-            'message' => $this->id,
+            'message' => $this->message,
             'date_insert' => $this->dateInsert,
             'user_id' => $this->userId
         ];
