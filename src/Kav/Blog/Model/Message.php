@@ -51,14 +51,10 @@ class Message extends AbstractModel
         if (!$fields['id']) {
             trigger_error(self::ERR_ID, E_USER_ERROR);
         }
+        $str = $this->generateUpdateQuery($fields);
         return Db::getInstance()->exec(
-            'UPDATE ' . $this->getTableName() . ' SET user_id = :user_id, message = :message, date_insert = :date_insert WHERE `id` = :id',
-            [
-                ':user_id' => $fields['user_id'],
-                ':message' => $fields['message'],
-                ':date_insert' => $fields['date_insert'],
-                ':id' => $fields['id']
-            ]
+            'UPDATE ' . $this->getTableName() . ' SET ' . $str . ' WHERE id = :id',
+            $fields
         );
     }
 

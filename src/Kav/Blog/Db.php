@@ -46,7 +46,7 @@ class Db
     {
         if (!$this->pdo) {
             $this->getConfig();
-            $this->pdo = new \PDO('mysql:host=' . $this->config['host'] . ';dbname=' . $this->config['dbname'], $this->config['user'], $this->config['password']);
+            $this->pdo = new \PDO('mysql:host=' . $this->config['host'] . ';dbname=' . $this->config['dbname'], $this->config['user'], $this->config['password'], [\PDO::MYSQL_ATTR_FOUND_ROWS => true]); // https://www.php.net/manual/ru/pdostatement.rowcount.php чтобы update считал точно количество найденных строк
         }
 
         return $this->pdo;

@@ -28,4 +28,20 @@ abstract class AbstractModel implements ModelInterface
     {
         return Db::getInstance()->exec('DELETE FROM ' . $this->getTableName() . ' WHERE `id` = :id', [':id' => $id]);
     }
+
+    protected function generateUpdateQuery(array &$fields)
+    {
+        $result = '';
+        $newFields = [];
+        if ($fields['id']) {
+            $newFields[':id'] = $fields['id'];
+            unset($fields['id']);
+        }
+        foreach ($fields as $field => $value) {
+            $result .= $field . ' = :' . $field;
+            $newFields[':' . $field]  = $value;
+        }
+        $fields = $newFields;
+        return $result;
+    }
 }
