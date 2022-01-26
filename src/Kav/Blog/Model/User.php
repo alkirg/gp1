@@ -9,19 +9,20 @@ class User extends AbstractModel
     const ERR_EMAIL = 'Не указана почта';
     const ERR_PASSWORD = 'Не указан пароль';
     const ERR_ID = 'Не указан id';
+    const SALT = 'fqoijw1823ur';
 
     private string $name;
     private string $dateInsert;
     private string $email;
     private string $password;
 
-    public function __construct($id, $name, $dateInsert, $email, $password)
+    public function __construct($args = [])
     {
-        $this->name = $name;
-        $this->dateInsert = $dateInsert;
-        $this->email = $email;
-        $this->password = $password;
-        parent::__construct($id);
+        $this->name = $args['name'] ?? '';
+        $this->dateInsert = $args['date_insert'] ?? '';
+        $this->email = $args['email'] ?? '';
+        $this->password = $args['password'] ?? '';
+        parent::__construct($args['id'] ?? 0);
     }
 
     public function fields(): array
@@ -37,7 +38,7 @@ class User extends AbstractModel
 
     public function getByEmail(string $email)
     {
-        return Db::getInstance()->fetch('SELECT ' . $this->getPublicFields . ' FROM ' . $this->getTableName() . ' WHERE email = :email', [':email' => $email]);
+        return Db::getInstance()->fetch('SELECT ' . $this->getPublicFields() . ' FROM ' . $this->getTableName() . ' WHERE email = :email', [':email' => $email]);
     }
 
     public function add(array $fields): int
@@ -45,7 +46,7 @@ class User extends AbstractModel
         $this->checkFields($fields);
         $user = $this->getByEmail($fields['email']);
         if (is_array($user)) {
-            return $user['id'];
+            return false;
         }
         $db = Db::getInstance();
         $db->exec(
@@ -54,7 +55,7 @@ class User extends AbstractModel
                 ':name' => $fields['name'],
                 ':email' => $fields['email'],
                 ':date_insert' => $fields['date_insert'],
-                ':password' => $fields['password']
+                ':password' => $this->generatePasswordHash($fields['password'])
             ]
         );
         return $db->lastInsertId();
@@ -65,16 +66,12 @@ class User extends AbstractModel
         if (!$fields['id']) {
             trigger_error(self::ERR_ID, E_USER_ERROR);
         }
-        $this->checkFields($fields);
+        if ($fields['password']) {
+            $fields['password'] = $this->generatePasswordHash($fields['password']);
+        }
         return Db::getInstance()->exec(
-            'UPDATE ' . $this->getTableName() . ' SET `name` = :name, email = :email, date_insert = :date_insert, `password` = :password WHERE `id` = :id',
-            [
-                ':name' => $fields['name'],
-                ':email' => $fields['email'],
-                ':date_insert' => $fields['date_insert'],
-                ':password' => $fields['password'],
-                ':id' => $fields['id']
-            ]
+            'UPDATE ' . $this->getTableName() . ' SET ' . $this->generateUpdateQuery($fields) . ' WHERE id = :id',
+            $fields
         );
     }
 
@@ -101,5 +98,10 @@ class User extends AbstractModel
     protected function getPublicFields()
     {
         return '`id`, `name`, email, date_insert';
+    }
+
+    public function generatePasswordHash($password)
+    {
+        return sha1($password . self::SALT);
     }
 }

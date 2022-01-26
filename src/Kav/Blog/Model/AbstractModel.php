@@ -6,7 +6,7 @@ abstract class AbstractModel implements ModelInterface
 {
     protected int $id;
 
-    public function __construct($id = -1)
+    public function __construct($id)
     {
         $this->id = $id;
     }
@@ -38,7 +38,7 @@ abstract class AbstractModel implements ModelInterface
             unset($fields['id']);
         }
         foreach ($fields as $field => $value) {
-            $result .= $field . ' = :' . $field;
+            $result .= '`' . $field . '` = :' . $field;
             $newFields[':' . $field]  = $value;
         }
         $fields = $newFields;

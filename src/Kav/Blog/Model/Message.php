@@ -17,8 +17,8 @@ class Message extends AbstractModel
     {
         $this->message = $args['message'] ?? '';
         $this->dateInsert = $args['date_insert'] ?? '';
-        $this->userId = $args['user_id'] ?? -1;
-        parent::__construct($args['id'] ?? -1);
+        $this->userId = $args['user_id'] ?? 0;
+        parent::__construct($args['id'] ?? 0);
     }
 
     public function fields(): array
@@ -51,9 +51,8 @@ class Message extends AbstractModel
         if (!$fields['id']) {
             trigger_error(self::ERR_ID, E_USER_ERROR);
         }
-        $str = $this->generateUpdateQuery($fields);
         return Db::getInstance()->exec(
-            'UPDATE ' . $this->getTableName() . ' SET ' . $str . ' WHERE id = :id',
+            'UPDATE ' . $this->getTableName() . ' SET ' . $this->generateUpdateQuery($fields) . ' WHERE id = :id',
             $fields
         );
     }
