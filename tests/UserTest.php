@@ -1,8 +1,5 @@
 <?php
-require_once '../src/Kav/Blog/Db.php';
-require_once '../src/Kav/Blog/Model/ModelInterface.php';
-require_once '../src/Kav/Blog/Model/AbstractModel.php';
-require_once '../src/Kav/Blog/Model/User.php';
+require '../vendor/autoload.php';
 use \Kav\Blog\Model\User;
 
 $user = new User();
