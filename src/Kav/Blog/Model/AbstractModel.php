@@ -1,6 +1,6 @@
 <?php
 namespace Kav\Blog\Model;
-use Kav\Blog\Db;
+use Kav\Blog\Base\Db;
 
 abstract class AbstractModel implements ModelInterface
 {

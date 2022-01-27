@@ -1,6 +1,7 @@
 <?php
 namespace Kav\Blog\Model;
-use Kav\Blog\Db;
+use Kav\Blog\Base\Db;
+use Kav\Blog\Base\ModelException;
 
 class Message extends AbstractModel
 {
@@ -49,7 +50,7 @@ class Message extends AbstractModel
     public function update(array $fields): bool
     {
         if (!$fields['id']) {
-            trigger_error(self::ERR_ID, E_USER_ERROR);
+            throw new ModelException(self::ERR_ID);
         }
         return Db::getInstance()->exec(
             'UPDATE ' . $this->getTableName() . ' SET ' . $this->generateUpdateQuery($fields) . ' WHERE id = :id',
@@ -60,10 +61,10 @@ class Message extends AbstractModel
     private function checkFields(array $fields): bool
     {
         if (!$fields['user_id']) {
-            trigger_error(self::ERR_USER, E_USER_ERROR);
+            throw new ModelException(self::ERR_USER);
         }
         if (!$fields['message']) {
-            trigger_error(self::ERR_MESSAGE, E_USER_ERROR);
+            throw new ModelException(self::ERR_MESSAGE);
         }
 
         return true;

@@ -1,9 +1,9 @@
 <?php
-namespace Kav\Blog;
+namespace Kav\Blog\Base;
 
 class Db
 {
-    const CONFIG_PATH = __DIR__ . '/../../../config.json';
+    const CONFIG_PATH = __DIR__ . '/../../../../config.json';
     const ERR_CONFIG = 'Не найден файл конфигурации';
     const ERR_QUERY = 'Неизвестная ошибка запроса';
 

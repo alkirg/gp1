@@ -1,6 +1,7 @@
 <?php
 namespace Kav\Blog\Model;
-use \Kav\Blog\Db;
+use \Kav\Blog\Base\Db;
+use Kav\Blog\Base\ModelException;
 
 class User extends AbstractModel
 {
@@ -64,7 +65,7 @@ class User extends AbstractModel
     public function update(array $fields): bool
     {
         if (!$fields['id']) {
-            trigger_error(self::ERR_ID, E_USER_ERROR);
+            throw new ModelException(self::ERR_ID);
         }
         if ($fields['password']) {
             $fields['password'] = $this->generatePasswordHash($fields['password']);
@@ -75,16 +76,21 @@ class User extends AbstractModel
         );
     }
 
+    public function register(string $email, string $password, string $confirmPassword)
+    {
+
+    }
+
     private function checkFields(array $fields): bool
     {
         if (!$fields['name']) {
-            trigger_error(self::ERR_NAME, E_USER_ERROR);
+            throw new ModelException(self::ERR_NAME);
         }
         if (!$fields['email']) {
-            trigger_error(self::ERR_EMAIL, E_USER_ERROR);
+            throw new ModelException(self::ERR_EMAIL);
         }
         if (!$fields['password']) {
-            trigger_error(self::ERR_PASSWORD, E_USER_ERROR);
+            throw new ModelException(self::ERR_PASSWORD);
         }
 
         return true;
