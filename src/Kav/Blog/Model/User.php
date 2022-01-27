@@ -11,6 +11,7 @@ class User extends AbstractModel
     const ERR_EMAIL = 'Не указана почта';
     const ERR_PASSWORD = 'Не указан пароль';
     const ERR_PASSWORD_CONFIRM = 'Пароли не совпадают';
+    const ERR_LOGIN = 'Логин или пароль указаны неверно';
     const ERR_ID = 'Не указан id';
     const SALT = 'fqoijw1823ur';
 
@@ -69,9 +70,6 @@ class User extends AbstractModel
         if (!$fields['id']) {
             throw new ModelException(self::ERR_ID);
         }
-        if ($fields['password']) {
-            $fields['password'] = $this->generatePasswordHash($fields['password']);
-        }
         return Db::getInstance()->exec(
             'UPDATE ' . $this->getTableName() . ' SET ' . $this->generateUpdateQuery($fields) . ' WHERE id = :id',
             $fields
@@ -87,8 +85,17 @@ class User extends AbstractModel
         return $this->add([
            'name' => $fields['name'],
            'email' => $fields['email'],
-           'password' => $this->generatePasswordHash($fields['password'])
+           'password' => $fields['password']
         ]);
+    }
+
+    public function authorize(string $login, string $password)
+    {
+        $user = $this->getByEmail($login);
+        if (!$user || $user['password'] !== $this->generatePasswordHash($password)) {
+            throw new ModelException(self::ERR_LOGIN);
+        }
+        return $user;
     }
 
     private function checkFields(array $fields): bool
@@ -113,7 +120,7 @@ class User extends AbstractModel
 
     protected function getPublicFields()
     {
-        return '`id`, `name`, email, date_insert';
+        return '*';
     }
 
     public function generatePasswordHash($password)

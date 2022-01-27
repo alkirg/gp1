@@ -25,3 +25,16 @@ $result = $user->get();
 echo '<pre>';
 print_r($result);
 echo '</pre>';
+$result = $user->register([
+    'email' => 'test112@test.tst',
+    'name' => 'some name112',
+    'password' => 'letitbe',
+    'confirm_password' => 'letitbe'
+]);
+if ($result) {
+    echo '<pre>';
+    print_r($user->getById($result));
+    echo '</pre>';
+}
+$result = $user->authorize('test112@test.tst', 'letitbe');
+var_dump($result);
