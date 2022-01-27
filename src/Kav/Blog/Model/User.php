@@ -1,6 +1,7 @@
 <?php
 namespace Kav\Blog\Model;
-use \Kav\Blog\Base\Db;
+use Kav\Blog\Base\Base;
+use Kav\Blog\Base\Db;
 use Kav\Blog\Base\ModelException;
 
 class User extends AbstractModel
@@ -9,6 +10,7 @@ class User extends AbstractModel
     const ERR_NAME = 'Не указано имя';
     const ERR_EMAIL = 'Не указана почта';
     const ERR_PASSWORD = 'Не указан пароль';
+    const ERR_PASSWORD_CONFIRM = 'Пароли не совпадают';
     const ERR_ID = 'Не указан id';
     const SALT = 'fqoijw1823ur';
 
@@ -55,7 +57,7 @@ class User extends AbstractModel
             [
                 ':name' => $fields['name'],
                 ':email' => $fields['email'],
-                ':date_insert' => $fields['date_insert'],
+                ':date_insert' => $fields['date_insert'] ?? date(Base::getDateFormat()),
                 ':password' => $this->generatePasswordHash($fields['password'])
             ]
         );
@@ -76,9 +78,17 @@ class User extends AbstractModel
         );
     }
 
-    public function register(string $email, string $password, string $confirmPassword)
+    public function register(array $fields)
     {
-
+        $this->checkFields($fields);
+        if ($fields['password'] !== $fields['confirm_password']) {
+            throw new ModelException(self::ERR_PASSWORD_CONFIRM);
+        }
+        return $this->add([
+           'name' => $fields['name'],
+           'email' => $fields['email'],
+           'password' => $this->generatePasswordHash($fields['password'])
+        ]);
     }
 
     private function checkFields(array $fields): bool

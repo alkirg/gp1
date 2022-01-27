@@ -1,5 +1,6 @@
 <?php
 namespace Kav\Blog\Model;
+use Kav\Blog\Base\Base;
 use Kav\Blog\Base\Db;
 use Kav\Blog\Base\ModelException;
 
@@ -41,7 +42,7 @@ class Message extends AbstractModel
             [
                 ':user_id' => $fields['user_id'],
                 ':message' => $fields['message'],
-                ':date_insert' => $fields['date_insert'],
+                ':date_insert' => $fields['date_insert'] ?? date(Base::getDateFormat()),
             ]
         );
         return $db->lastInsertId();
