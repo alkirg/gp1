@@ -1,10 +1,10 @@
 <?php
 namespace App\Model;
 
-use Kav\Blog\Model\AbstractModel;
 use Kav\Blog\Base\Base;
 use Kav\Blog\Base\Db;
-use Kav\Blog\Base\ModelException;
+use Kav\Blog\Model\AbstractModel;
+use Kav\Blog\Model\ModelException;
 
 class User extends AbstractModel
 {

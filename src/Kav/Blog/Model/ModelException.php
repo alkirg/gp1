@@ -1,5 +1,5 @@
 <?php
-namespace Kav\Blog\Base;
+namespace Kav\Blog\Model;
 
 class ModelException extends \Exception
 {

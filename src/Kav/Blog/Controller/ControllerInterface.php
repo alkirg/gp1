@@ -1,9 +1,9 @@
 <?php
 namespace Kav\Blog\Controller;
 
-use Kav\Blog\View\AbstractView;
+use Kav\Blog\View\View;
 
 interface ControllerInterface
 {
-    public function setView(AbstractView $view);
+    public function setView(View $view);
 }

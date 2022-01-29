@@ -1,1 +1,1 @@
-{"host":"<host>","dbname":"<database>","user":"<user>","password":"<password>"}
+{"host":"<host>","dbname":"<database>","user":"<user>","password":"<password>","root":"/var/www/home","folder": "/home/html"}

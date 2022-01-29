@@ -1,11 +1,12 @@
 <?php
 namespace Kav\Blog\View;
+
 use \Kav\Blog\Base\Base;
 
-abstract class AbstractView implements ViewInterface
+class View implements ViewInterface
 {
     private string $templatePath;
-    private array $data;
+    private array $data = [];
 
     public function __construct()
     {
@@ -18,5 +19,10 @@ abstract class AbstractView implements ViewInterface
         ob_start();
         include $this->templatePath . DIRECTORY_SEPARATOR . $template;
         return ob_get_clean();
+    }
+
+    public function assign(string $name, $value)
+    {
+        $this->data[$name] = $value;
     }
 }
