@@ -1,6 +1,6 @@
 <?php
-require_once '../src/Kav/Blog/Db.php';
-use Kav\Blog\Db;
+require '../vendor/autoload.php';
+use Kav\Blog\Base\Db;
 
 //$q = 'INSERT INTO users(`name`, phone, email) VALUES (:name, :phone, :email)';
 //$db = Db::getInstance();
@@ -13,10 +13,9 @@ use Kav\Blog\Db;
 
 $q = 'SELECT * FROM users';
 $db = Db::getInstance();
-var_dump($db->fetchAll($q));
-
-trigger_error('test', E_USER_ERROR);
-echo 'sms';
+echo '<pre>';
+print_r($db->fetchAll($q));
+echo '</pre>';
 
 //$q = 'SELECT * FROM users WHERE `id` = 2';
 //$db = Db::getInstance();

@@ -13,6 +13,8 @@ abstract class AbstractModel implements ModelInterface
 
     abstract protected function getTableName();
     abstract protected function getPublicFields();
+    abstract public function add(array $fields);
+    abstract public function update(array $fields);
 
     public function get()
     {

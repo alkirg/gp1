@@ -1,5 +1,7 @@
 <?php
-namespace Kav\Blog\Model;
+namespace App\Model;
+
+use Kav\Blog\Model\AbstractModel;
 use Kav\Blog\Base\Base;
 use Kav\Blog\Base\Db;
 use Kav\Blog\Base\ModelException;
