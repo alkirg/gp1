@@ -11,6 +11,7 @@ class User extends AbstractModel
     const TABLE_NAME = 'users';
     const ERR_NAME = 'Не указано имя';
     const ERR_EMAIL = 'Не указана почта';
+    const ERR_USER_EXISTS = 'Пользователь с такой почтой уже существует';
     const ERR_PASSWORD = 'Не указан пароль';
     const ERR_PASSWORD_CONFIRM = 'Пароли не совпадают';
     const ERR_LOGIN = 'Логин или пароль указаны неверно';
@@ -52,7 +53,7 @@ class User extends AbstractModel
         $this->checkFields($fields);
         $user = $this->getByEmail($fields['email']);
         if (is_array($user)) {
-            return false;
+            throw new ModelException(self::ERR_USER_EXISTS);
         }
         $db = Db::getInstance();
         $db->exec(
@@ -71,6 +72,9 @@ class User extends AbstractModel
     {
         if (!$fields['id']) {
             throw new ModelException(self::ERR_ID);
+        }
+        if ($fields['password']) {
+            $fields['password'] = $this->generatePasswordHash($fields['password']);
         }
         return Db::getInstance()->exec(
             'UPDATE ' . $this->getTableName() . ' SET ' . $this->generateUpdateQuery($fields) . ' WHERE id = :id',

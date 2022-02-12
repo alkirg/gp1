@@ -1,10 +1,10 @@
 <?php
-require_once '../src/Kav/Blog/Db.php';
-require_once '../src/Kav/Blog/Model/ModelInterface.php';
-require_once '../src/Kav/Blog/Model/AbstractModel.php';
-require_once '../src/Kav/Blog/Model/Message.php';
-use \Kav\Blog\Model\Message;
+require '../vendor/autoload.php';
 
+use App\Model\Message;
+
+var_dump((new Message())->get());
+die;
 $message = new Message();
 var_dump($message->fields());
 //$result = $message->add([

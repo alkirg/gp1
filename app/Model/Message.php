@@ -35,6 +35,11 @@ class Message extends AbstractModel
         ];
     }
 
+    public function getByUser(int $id)
+    {
+        return Db::getInstance()->fetchAll('SELECT ' . $this->getPublicFields() . ' FROM ' . $this->getTableName() . ' WHERE `user_id` = :id ORDER BY date_insert desc', [':id' => $id]);
+    }
+
     public function add(array $fields): int
     {
         $this->checkFields($fields);

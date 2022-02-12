@@ -25,4 +25,9 @@ class View implements ViewInterface
     {
         $this->data[$name] = $value;
     }
+
+    public function __get($varName)
+    {
+        return $this->data[$varName] ?? null;
+    }
 }
