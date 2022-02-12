@@ -14,7 +14,7 @@ class Route implements RouteInterface
     {
         if (!$this->processed) {
             $folder = Base::getInstance()->getConfig()['folder'];
-            $path = str_replace($folder, '', $_SERVER['REQUEST_URI']);
+            $path = str_replace($folder, '', parse_url($_SERVER['REQUEST_URI'])['path']);
             if (($route = $this->routes[$path] ?? null) !== null) {
                 $this->controllerName = $route[0];
                 $this->actionName = $route[1];

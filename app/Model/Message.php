@@ -4,14 +4,16 @@ namespace App\Model;
 use Kav\Blog\Model\AbstractModel;
 use Kav\Blog\Base\Base;
 use Kav\Blog\Base\Db;
-use Kav\Blog\Base\ModelException;
+use Kav\Blog\Model\ModelException;
 
 class Message extends AbstractModel
 {
     const TABLE_NAME = 'posts';
     const ERR_ID = 'Не указан id';
     const ERR_USER = 'Не указан пользователь';
+    const ERR_TITLE = 'Не указан заголовок';
     const ERR_MESSAGE = 'Не указано сообщение';
+    const POSTS_COUNT = 20;
 
     private string $message;
     private string $dateInsert;
@@ -35,9 +37,14 @@ class Message extends AbstractModel
         ];
     }
 
-    public function getByUser(int $id)
+    public function getLast($count = self::POSTS_COUNT)
     {
-        return Db::getInstance()->fetchAll('SELECT ' . $this->getPublicFields() . ' FROM ' . $this->getTableName() . ' WHERE `user_id` = :id ORDER BY date_insert desc', [':id' => $id]);
+        return Db::getInstance()->fetchAll('SELECT message.id, message.title, message.message, message.date_insert, users.name as author FROM ' . $this->getTableName() . ' message INNER JOIN users on message.user_id = users.id ORDER BY date_insert desc LIMIT ' . $count);
+    }
+
+    public function getByUser(int $id, $count = false)
+    {
+        return Db::getInstance()->fetchAll('SELECT ' . $this->getPublicFields() . ' FROM ' . $this->getTableName() . ' WHERE `user_id` = :id ORDER BY date_insert desc' . ($count ? ' LIMIT ' . $count : ''), [':id' => $id]);
     }
 
     public function add(array $fields): int
@@ -45,8 +52,9 @@ class Message extends AbstractModel
         $this->checkFields($fields);
         $db = Db::getInstance();
         $db->exec(
-            'INSERT INTO ' . $this->getTableName() . '(user_id, message, date_insert) VALUES (:user_id, :message, :date_insert)',
+            'INSERT INTO ' . $this->getTableName() . '(user_id, message, date_insert, title) VALUES (:user_id, :message, :date_insert, :title)',
             [
+                ':title' => $fields['title'],
                 ':user_id' => $fields['user_id'],
                 ':message' => $fields['message'],
                 ':date_insert' => $fields['date_insert'] ?? date(Base::getDateFormat()),
@@ -70,6 +78,9 @@ class Message extends AbstractModel
     {
         if (!$fields['user_id']) {
             throw new ModelException(self::ERR_USER);
+        }
+        if (!$fields['title']) {
+            throw new ModelException(self::ERR_TITLE);
         }
         if (!$fields['message']) {
             throw new ModelException(self::ERR_MESSAGE);

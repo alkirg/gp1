@@ -22,6 +22,7 @@ class User extends AbstractModel
     private string $dateInsert;
     private string $email;
     private string $password;
+    private bool|null $admin;
 
     public function __construct($args = [])
     {
@@ -29,6 +30,7 @@ class User extends AbstractModel
         $this->dateInsert = $args['date_insert'] ?? '';
         $this->email = $args['email'] ?? '';
         $this->password = $args['password'] ?? '';
+        $this->admin = $args['admin'] ?? null;
         parent::__construct($args['id'] ?? 0);
     }
 
@@ -40,6 +42,7 @@ class User extends AbstractModel
             'date_insert' => $this->dateInsert,
             'email' => $this->email,
             'password' => $this->password,
+            'admin' => $this->admin
         ];
     }
 
@@ -102,6 +105,14 @@ class User extends AbstractModel
             throw new ModelException(self::ERR_LOGIN);
         }
         return $user;
+    }
+
+    public function isAdmin(int $id)
+    {
+        if (isset($this->admin)) {
+            return $this->admin;
+        }
+        return isset($this->getById($id)['admin']);
     }
 
     private function checkFields(array $fields): bool
