@@ -77,4 +77,9 @@ class Blog extends AbstractController
     {
         echo json_encode(['success' => true, 'data' => (new Message())->getByUser($userId, $count)]);
     }
+
+    public function sendEmail(string $mail, string $message)
+    {
+
+    }
 }
