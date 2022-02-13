@@ -8,7 +8,7 @@
         <?if ($this->error) {?>
         <p style="color:red;"><?=$this->error?></p>
         <?}?>
-        <form action="blog/post" method="post">
+        <form action="blog/post" method="post" enctype="multipart/form-data">
             <p><input type="text" name="title" placeholder="Заголовок" value="<?=$_POST['title']?>"></p>
             <p><textarea name="message" placeholder="Текст" rows="20" cols="50"><?=$_POST['message']?></textarea></p>
             <p>Добавить изображение:<br><input type="file" name="image"></p>

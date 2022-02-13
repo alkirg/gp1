@@ -18,12 +18,14 @@ class Message extends AbstractModel
     private string $message;
     private string $dateInsert;
     private int $userId;
+    private string $image;
 
     public function __construct($args = [])
     {
         $this->message = $args['message'] ?? '';
         $this->dateInsert = $args['date_insert'] ?? '';
         $this->userId = $args['user_id'] ?? 0;
+        $this->image = $args['image'] ?? '';
         parent::__construct($args['id'] ?? 0);
     }
 
@@ -33,7 +35,8 @@ class Message extends AbstractModel
             'id' => $this->id,
             'message' => $this->message,
             'date_insert' => $this->dateInsert,
-            'user_id' => $this->userId
+            'user_id' => $this->userId,
+            'image' => $this->image
         ];
     }
 
@@ -52,11 +55,12 @@ class Message extends AbstractModel
         $this->checkFields($fields);
         $db = Db::getInstance();
         $db->exec(
-            'INSERT INTO ' . $this->getTableName() . '(user_id, message, date_insert, title) VALUES (:user_id, :message, :date_insert, :title)',
+            'INSERT INTO ' . $this->getTableName() . '(user_id, message, date_insert, title, image) VALUES (:user_id, :message, :date_insert, :title, :image)',
             [
                 ':title' => $fields['title'],
                 ':user_id' => $fields['user_id'],
                 ':message' => $fields['message'],
+                ':image' => $fields['image'],
                 ':date_insert' => $fields['date_insert'] ?? date(Base::getDateFormat()),
             ]
         );

@@ -16,6 +16,9 @@
             <h3><?=$post['title']?></h3>
             <p>
                 <strong><?=$post['date_insert']?></strong><br>
+                <?if ($post['image']) {?>
+                <p><img src="<?=$post['image']?>" alt=""></p>
+                <?}?>
                 <?=$post['message']?>
             </p>
             <?if ($this->admin) {?>

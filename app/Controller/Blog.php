@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Kav\Blog\Base\Base;
 use Kav\Blog\Controller\AbstractController;
 use App\Model\User as UserModel;
 use App\Model\Message;
@@ -11,6 +12,9 @@ class Blog extends AbstractController
     const ERR_USER = 'Не указан пользователь';
     const ERR_USER_NOT_FOUND = 'Пользователь не найден';
     const ERR_MESSAGE_NOT_FOUND = 'Пост на найден';
+    const ERR_POST_FILE = 'Файл не получен';
+    const ERR_SAVE_FILE = 'Файл не сохранен';
+    const UPLOAD_DIR = 'upload';
 
     public function index()
     {
@@ -26,19 +30,36 @@ class Blog extends AbstractController
     {
         $this->checkAuth();
         if (isset($_POST['title']) && isset($_POST['message'])) {
-            try {
-                $message = (new Message())->add([
-                    'title' => $_POST['title'],
-                    'message' => $_POST['message'],
-                    'user_id' => $_SESSION['user']
-                ]);
-            } catch(\Exception $exception) {
-                return $this->view->render('Blog/post.php', ['error' => $exception->getMessage()]);
-            } finally {
-                $this->redirect('/');
-            }
+            (new Message())->add([
+                'title' => $_POST['title'],
+                'message' => $_POST['message'],
+                'user_id' => $_SESSION['user'],
+                'image' => isset($_FILES['image']) ? $this->saveFile($_FILES['image']) : ''
+            ]);
+            $this->redirect('/');
         }
         return $this->view->render('Blog/post.php');
+    }
+
+    private function saveFile(array $file): string
+    {
+        $result = self::UPLOAD_DIR . DIRECTORY_SEPARATOR . basename($file['name']);
+        $file = file_get_contents($file['tmp_name']);
+        if (!$file) {
+            throw new \Exception(self::ERR_POST_FILE);
+        }
+        if (
+            false === file_put_contents(
+                $_SERVER['DOCUMENT_ROOT'] .
+                    Base::getInstance()->getConfig()['folder'] .
+                    DIRECTORY_SEPARATOR .
+                    $result,
+                $file
+            )
+        ) {
+            throw new \Exception(self::ERR_SAVE_FILE);
+        }
+        return $result;
     }
 
     public function posts()
